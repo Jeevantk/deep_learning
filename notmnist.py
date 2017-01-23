@@ -1,7 +1,7 @@
 from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
-import os
+import os,random
 import sys
 import tarfile
 from IPython.display import display, Image
@@ -9,6 +9,8 @@ from scipy import ndimage
 from sklearn.linear_model import LogisticRegression
 from six.moves.urllib.request import urlretrieve
 from six.moves import cPickle as pickle
+
+
 
 url = 'http://commondatastorage.googleapis.com/books1000/'
 last_percent_reported = None
@@ -44,7 +46,7 @@ test_filename = maybe_download('notMNIST_small.tar.gz', 8458043)
 
 
 num_classes=10
-np.ramdom.seed(133)
+np.random.seed(133)
 
 def maybe_extract(filename,force=False):
 	root=os.path.splitext(os.path.splitext(filename)[0])[0]  # remove tar.gz
@@ -57,7 +59,7 @@ def maybe_extract(filename,force=False):
 		tar.extractall()
 		tar.close()
 
-	data_folders=[os.path.join(root,d) for d in sorted(os.listdir(root)) if os.pathisdir(os.path.join(root,d))]
+	data_folders=[os.path.join(root,d) for d in sorted(os.listdir(root)) if os.path.isdir(os.path.join(root,d))]
 
 	if len(data_folders) != num_classes:
 		raise Exception('Expected %d folders , one per class . FOund %d instead.' %(num_classes,len(data_folders)))
@@ -68,6 +70,17 @@ def maybe_extract(filename,force=False):
 
 train_folders=maybe_extract(train_filename)
 test_folders=maybe_extract(test_filename)
+
+# Problem number 1 : Display some of these saved images randomly so as  to check if we  did the correct thing
+
+dir_name="notMNIST_large"
+folder_names=["A","B","C","D","E","F","G","H","I","J"]
+for folder in folder_names:
+	im_name=random.choice(os.listdir(dir_name+'/'+folder))
+	im_file=dir_name+'/'+folder+'/'+im_name
+	display(Image(filename=im_file))
+
+	
 
 image_size=28
 pixel_depth=255.0
