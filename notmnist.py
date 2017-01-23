@@ -75,14 +75,16 @@ test_folders=maybe_extract(test_filename)
 
 dir_name="notMNIST_large"
 folder_names=["A","B","C","D","E","F","G","H","I","J"]
-for folder in folder_names:
-	im_name=random.choice(os.listdir(dir_name+'/'+folder))
-	im_file=dir_name+'/'+folder+'/'+im_name
-	img=cv2.imread(im_file)
-	cv2.imshow("Image",img)
-	cv2.waitKey(0)
 
-cv2.destroyAllWindows()	
+def display():
+	for folder in folder_names:
+		im_name=random.choice(os.listdir(dir_name+'/'+folder))
+		im_file=dir_name+'/'+folder+'/'+im_name
+		img=cv2.imread(im_file)
+		cv2.imshow("Image",img)
+		cv2.waitKey(0)
+
+	cv2.destroyAllWindows()	
 
 image_size=28
 pixel_depth=255.0
@@ -90,7 +92,7 @@ pixel_depth=255.0
 def load_letter(folder,min_num_images):
 	"""Load the data for a single letter label"""
 	image_files=os.listdir(folder)
-	dataset=np.ndarray(shape=len(image_files),image_size,image_size,dtype=np.float32)
+	dataset=np.ndarray(shape=(len(image_files),image_size,image_size),dtype=np.float32)
 	print(folder)
 	num_images=0
 	for image in image_files:
@@ -98,7 +100,7 @@ def load_letter(folder,min_num_images):
 		try:
 			image_data=(ndimage.imread(image_file).astype(float)-pixel_depth/2)/pixel_depth
 			if image_data.shape !=(image_size,image_size):
-				raise Exception("Unexpected Image Shape: %s" str(image_data.shape))
+				raise Exception("Unexpected Image Shape: %s" %str(image_data.shape))
 			dataset[num_images,:,:]=image_data
 			num_images+=1
 		except IOError as e:
@@ -129,8 +131,5 @@ def maybe_pickle(data_folders,min_num_images_per_class,force=False):
 	return dataset_names
 
 
-
-
-	
-
-
+train_datasets = maybe_pickle(train_folders, 45000)
+test_datasets = maybe_pickle(test_folders, 1800)
