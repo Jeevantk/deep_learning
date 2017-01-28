@@ -133,3 +133,21 @@ def maybe_pickle(data_folders,min_num_images_per_class,force=False):
 
 train_datasets = maybe_pickle(train_folders, 45000)
 test_datasets = maybe_pickle(test_folders, 1800)
+
+with open('notMNIST_large/B.pickle','rd')  as pk_f:
+	datatoshow=pickle.load(pk_f)
+print(datatoshow.shape)
+
+# pic=datatoshow[0,:,:]
+# plt.imshow(pic)
+# plt.show()
+
+file_path='notMNIST_large/{0}.pickle'
+for ele in 'ABCDEFGIJ':
+	with open(file_path.format(ele),'rb') as pk_f:
+		dat=pickle.load(pk_f)
+	print('Number of pictures in {}.pickle ='.format(ele),dat.shape[0])
+
+
+def make_arrays(nb_rows,img_size):
+	
